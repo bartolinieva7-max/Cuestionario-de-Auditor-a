@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Cuestionario: Auditoría y Diseño de Redes LAN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6d0ff 0%, #f5e0ff 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, sans-serif;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quiz-wrapper {
+            max-width: 780px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffffdd;
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(180, 140, 220, 0.4);
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            border-bottom: 3px solid #d9b8ff;
+            padding-bottom: 0.7rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #9b59b6, #c78de0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.2px;
+        }
+
+        .sub {
+            color: #b77fdb;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+            font-weight: 500;
+        }
+
+        .progress-area {
+            background: #f3eaff;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #7b4a9e;
+            font-weight: 600;
+        }
+
+        .question-counter {
+            font-weight: 700;
+            background: #e7d4ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+        }
+
+        .score-badge {
+            background: #c8b0e0;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #3a2a4a;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ecd9ff;
+        }
+
+        .question-text {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: #5c3b7a;
+            margin-bottom: 1.2rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            cursor: pointer;
+            padding: 0.6rem 0.8rem;
+            border-radius: 1rem;
+            background: #fefaf5;
+            border: 1px solid #f0d6ff;
+            transition: all 0.15s;
+        }
+
+        .option:hover {
+            background: #f8f0ff;
+            border-color: #d4aaff;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid #bf94e4;
+            border-radius: 50%;
+            margin-top: 0.1rem;
+            cursor: pointer;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        input[type="radio"]:checked {
+            background-color: #b77fdb;
+            border-color: #b77fdb;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        .option label {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            cursor: pointer;
+            color: #5a3a7a;
+            font-weight: 500;
+        }
+
+        .feedback {
+            margin-top: 0.8rem;
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            background: #fef7e8;
+            border-left: 5px solid;
+            line-height: 1.4;
+            color: #5e5a5a;
+        }
+
+        .feedback.correct {
+            border-left-color: #8fbc8f;
+            background: #e6f5e6;
+        }
+
+        .feedback.incorrect {
+            border-left-color: #e68a8a;
+            background: #ffe6e6;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            border: none;
+            background: #f0e0ff;
+            color: #9b6bbf;
+            font-weight: 700;
+            padding: 0.6rem 1.3rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            background: #d9c5ff;
+            color: #5c3a7a;
+        }
+
+        .btn-primary:hover {
+            background: #c9afff;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #f9e0ff;
+            color: #b77fdb;
+        }
+
+        .btn-secondary:hover {
+            background: #fcd6ff;
+        }
+
+        .btn-reset {
+            background: #ffebcc;
+            color: #c97a3e;
+        }
+
+        .btn-reset:hover {
+            background: #ffe0b5;
+        }
+
+        .results-area {
+            margin-top: 1.5rem;
+            background: #fffaf0;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 1px solid #f5debc;
+            display: none;
+        }
+
+        .results-area h3 {
+            color: #bd7a42;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-summary {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: bold;
+            color: #9e633a;
+        }
+
+        .result-detail {
+            max-height: 260px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+
+        .result-item {
+            padding: 0.4rem;
+            border-bottom: 1px solid #f2debc;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 1.2rem;
+            color: #c9a26e;
+        }
+
+        @media (max-width: 550px) {
+            .quiz-wrapper {
+                padding: 1rem;
+            }
+            .question-text {
+                font-size: 0.98rem;
+            }
+            .option label {
+                font-size: 0.88rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+    <div class="header">
+        <h1>🔍 Auditoría y Diseño de Redes LAN</h1>
+        <div class="sub">Capa física, switches, VLANs, Wi‑Fi, estándares y buenas prácticas</div>
+    </div>
+
+    <div class="progress-area">
+        <span class="question-counter" id="questionCounter">Pregunta 1 / 20</span>
+        <span class="score-badge" id="liveScore">✅ Aciertos: 0</span>
+    </div>
+
+    <div id="questionContainer"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn" class="btn btn-secondary">◀ Anterior</button>
+        <button id="nextBtn" class="btn btn-primary">Siguiente ▶</button>
+        <button id="resetBtn" class="btn btn-reset">⟳ Reiniciar</button>
+    </div>
+
+    <div id="resultsPanel" class="results-area"></div>
+    <footer>📌 Selecciona una opción → retroalimentación inmediata. Al finalizar, revisa tu puntuación.</footer>
+</div>
+
+<script>
+    // ==================== DATOS DEL CUESTIONARIO (20 preguntas) ====================
+    const questionsData = [
+        { text: "¿Cuál es la importancia fundamental de realizar una auditoría en la Capa 1 (física)?",
+          options: ["Configurar el enrutamiento dinámico entre sucursales.", "Establecer el fundamento para identificar cuellos de botella y puntos de fallo potenciales.", "Gestionar las direcciones IP de los dispositivos finales."],
+          correct: "B",
+          explanation: "Correcta (B): La Capa 1 es la base de la infraestructura. A es capa 3; C es implementación lógica."
+        },
+        { text: "Según los estándares de gestión de racks, ¿cuál es un formato de etiquetado consistente para los puertos?",
+          options: ["Nombre del Técnico-Fecha-Color.", "MDF-Rack-Slot-Puerto.", "IP-VLAN-Departamento."],
+          correct: "B",
+          explanation: "Correcta (B): Trazabilidad física completa. A no es estructural; C es lógico."
+        },
+        { text: "Al leer un datasheet, ¿qué indica la métrica de 'Switching Capacity'?",
+          options: ["La velocidad máxima de un solo puerto nominal.", "La cantidad de dispositivos que se pueden conectar por Wi-Fi.", "El total de Gbps que el switch puede procesar simultáneamente bajo carga máxima."],
+          correct: "C",
+          explanation: "Correcta (C): Capacidad de conmutación global. A es por puerto; B no aplica."
+        },
+        { text: "¿Para qué sirve conocer el 'Forwarding Rate' (PPS) de un switch?",
+          options: ["Para determinar el throughput según diferentes tamaños de paquetes.", "Para medir la distancia máxima del cable UTP.", "Para configurar la prioridad de tráfico de los alumnos."],
+          correct: "A",
+          explanation: "Correcta (A): Mide paquetes por segundo según tamaño. B es física; C es QoS."
+        },
+        { text: "¿Cuál es la principal limitación de un Switch Plug & Play (Unmanaged)?",
+          options: ["Son demasiado caros para redes pequeñas.", "Requieren un técnico certificado para su instalación inicial.", "Carecen de funcionalidades avanzadas como VLANs, QoS o gestión remota."],
+          correct: "C",
+          explanation: "Correcta (C): No son gestionables. A son baratos; B no necesitan técnico."
+        },
+        { text: "¿Cuál es el propósito específico de la VLAN 10 (Administración) en el diseño propuesto?",
+          options: ["Proveer acceso a Internet libre para todos los estudiantes.", "Aislar los dispositivos de gestión como switches y servidores para acceso restringido.", "Alojar aplicaciones de Active Directory y DNS."],
+          correct: "B",
+          explanation: "Correcta (B): VLAN de gestión restringida. A es alumnos; C es servidores (VLAN 30)."
+        },
+        { text: "¿Qué beneficio técnico aporta la segmentación por VLANs respecto al tráfico de broadcast?",
+          options: ["Elimina la necesidad de usar cables de fibra óptica.", "Aumenta el ancho de banda físico de los puertos de 1 Gbps a 10 Gbps.", "Reduce el dominio de broadcast, mejorando el rendimiento y reduciendo la congestión."],
+          correct: "C",
+          explanation: "Correcta (C): Limita broadcast a cada VLAN. A es falso; B es falso."
+        },
+        { text: "En el diagnóstico inalámbrico, ¿cuál es el valor objetivo de potencia de señal para una cobertura adecuada?",
+          options: ["-20 dBm.", "-65 dBm.", "-90 dBm."],
+          correct: "B",
+          explanation: "Correcta (B): -65 dBm es objetivo. -20 es excesivo; -90 es muy débil."
+        },
+        { text: "¿Qué ventaja ofrece el estándar Wi-Fi 6 (802.11ax) en entornos educativos?",
+          options: ["Permite usar cables artesanales sin pérdida de velocidad.", "Mayor densidad de dispositivos por punto de acceso y reducción de latencia.", "Elimina la necesidad de utilizar switches en la red core."],
+          correct: "B",
+          explanation: "Correcta (B): Ideal para alta densidad. A falso; C falso."
+        },
+        { text: "¿Cuál es la distancia máxima recomendada para un enlace de datos usando cable UTP?",
+          options: ["500 metros.", "100 metros.", "Kilómetros, si se usa blindaje adecuado."],
+          correct: "B",
+          explanation: "Correcta (B): 100 metros estándar. A excede; C solo fibra."
+        },
+        { text: "¿Qué característica define a los módulos SFP+?",
+          options: ["Son conectores exclusivos para cables de cobre de baja velocidad.", "Soportan velocidades de hasta 1 Gbps para distancias cortas.", "Son transceptores para 10 Gigabit Ethernet, esenciales para backbones de alta velocidad."],
+          correct: "C",
+          explanation: "Correcta (C): SFP+ = 10 Gbps. A falso; B es SFP estándar."
+        },
+        { text: "¿Por qué se recomienda el uso de patch cords certificados de fábrica en enlaces críticos?",
+          options: ["Porque son más coloridos y facilitan la organización visual.", "Porque garantizan el cumplimiento de especificaciones (TIA/EIA) y ofrecen garantías de largo plazo.", "Porque son más económicos que armar los cables manualmente."],
+          correct: "B",
+          explanation: "Correcta (B): Certificación y garantía. A estético; C son más caros."
+        },
+        { text: "¿Qué riesgo principal corren las redes de alta densidad al usar cables armados manualmente?",
+          options: ["Que el cable sea demasiado flexible.", "Degradación de rendimiento por desbalance de pares y crosstalk.", "Que el cable dure más de 25 años sin mantenimiento."],
+          correct: "B",
+          explanation: "Correcta (B): Armado manual afecta impedancia y causa errores. A no es riesgo; C es falso."
+        },
+        { text: "En el flujo de tráfico, ¿cuál es la función del Punto de Acceso (AP)?",
+          options: ["Asignar direcciones IP a través de DHCP.", "Convertir el tráfico inalámbrico 802.11 a cableado 802.3.", "Enrutar los datos directamente hacia la red Internet (BGP)."],
+          correct: "B",
+          explanation: "Correcta (B): Puente entre Wi-Fi y cableado. A es DHCP; C es router."
+        },
+        { text: "¿Qué rol desempeña el 'Router de Borde' en la salida a Internet?",
+          options: ["Organizar los cables dentro del rack MDF mediante velcros.", "Realizar enrutamiento entre redes (NAT/PAT) y aplicar filtrado mediante ACLs.", "Conmutar tramas Ethernet basadas únicamente en direcciones MAC."],
+          correct: "B",
+          explanation: "Correcta (B): NAT, ACLs, conexión con ISP. A es gestión física; C es switch."
+        },
+        { text: "¿Qué herramienta se recomienda para realizar un mapeo de cobertura Wi-Fi profesional?",
+          options: ["Ping y Traceroute.", "Software como Ekahau o NetSpot.", "Wireshark en modo promiscuo."],
+          correct: "B",
+          explanation: "Correcta (B): Ekahau/NetSpot para cobertura RF. Ping es conectividad; Wireshark es captura."
+        },
+        { text: "Al presentar una propuesta profesional, ¿qué diferencia al 'enfoque consultor' del 'enfoque técnico'?",
+          options: ["El consultor solo habla de marcas de hardware específicas.", "El consultor ignora el presupuesto para priorizar la velocidad.", "El consultor traduce especificaciones técnicas en beneficios tangibles para la institución."],
+          correct: "C",
+          explanation: "Correcta (C): Traduce tecnología a valor de negocio. A es técnico; B es mal consultor."
+        },
+        { text: "¿Qué porcentaje de utilización de canal se recomienda no superar en redes Wi-Fi?",
+          options: ["10%.", "30%.", "95%."],
+          correct: "B",
+          explanation: "Correcta (B): 30% máximo para evitar colisiones. 10% infrautiliza; 95% colapsa."
+        },
+        { text: "¿Cuál es una característica del conector de fibra óptica LC?",
+          options: ["Es un conector grande de 2.5mm usado en instalaciones muy antiguas.", "Es un conector pequeño de 1.25mm dominante en equipos modernos por su alta densidad.", "Es el único que puede transmitir datos sobre cables UTP Cat 6."],
+          correct: "B",
+          explanation: "Correcta (B): LC es pequeño (1.25mm), alta densidad. A es SC; C es falso."
+        },
+        { text: "¿Qué se busca al reducir el 'Dominio de Broadcast'?",
+          options: ["Que todos los alumnos puedan ver las impresoras de administración.", "Aumentar el alcance de la señal Wi-Fi a través de las paredes.", "Limitar el tráfico de difusión a segmentos pequeños para mejorar la eficiencia global de la red."],
+          correct: "C",
+          explanation: "Correcta (C): Segmentar broadcast evita saturación. A es inseguro; B es físico."
+        }
+    ];
+
+    let userAnswers = new Array(20).fill(null);
+    let currentIndex = 0;
+
+    const questionContainer = document.getElementById('questionContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const questionCounterSpan = document.getElementById('questionCounter');
+    const liveScoreSpan = document.getElementById('liveScore');
+    const resultsPanel = document.getElementById('resultsPanel');
+
+    function updateLiveScore() {
+        let correctCount = 0;
+        for (let i = 0; i < userAnswers.length; i++) {
+            if (userAnswers[i] && userAnswers[i] === questionsData[i].correct) correctCount++;
+        }
+        liveScoreSpan.textContent = `✅ Aciertos: ${correctCount} / 20`;
+        return correctCount;
+    }
+
+    function saveAnswer(selectedLetter) {
+        userAnswers[currentIndex] = selectedLetter;
+        updateLiveScore();
+        renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+        const q = questionsData[currentIndex];
+        const selected = userAnswers[currentIndex];
+        const letters = ['A', 'B', 'C'];
+        let optionsHtml = '';
+        q.options.forEach((opt, idx) => {
+            const letter = letters[idx];
+            const isChecked = (selected === letter);
+            optionsHtml += `
+                <div class="option" data-letter="${letter}">
+                    <input type="radio" name="question" value="${letter}" id="opt_${letter}" ${isChecked ? 'checked' : ''}>
+                    <label for="opt_${letter}"><strong>${letter})</strong> ${opt}</label>
+                </div>
+            `;
+        });
+
+        let feedbackHtml = '';
+        if (selected) {
+            const isCorrect = (selected === q.correct);
+            const correctLetter = q.correct;
+            const correctText = q.options[letters.indexOf(correctLetter)];
+            const explanation = q.explanation;
+            if (isCorrect) {
+                feedbackHtml = `<div class="feedback correct">✅ <strong>¡Correcto!</strong> ${explanation}</div>`;
+            } else {
+                feedbackHtml = `<div class="feedback incorrect">❌ <strong>Incorrecto.</strong> La respuesta correcta es ${correctLetter}) ${correctText}.<br>${explanation}</div>`;
+            }
+        } else {
+            feedbackHtml = `<div class="feedback" style="border-left-color:#d9b8ff; background:#f3eaff;">⚡ Selecciona una opción para ver la retroalimentación.</div>`;
+        }
+
+        const html = `
+            <div class="question-card">
+                <div class="question-text">${q.text}</div>
+                <div class="options" id="optionsContainer">
+                    ${optionsHtml}
+                </div>
+                ${feedbackHtml}
+            </div>
+        `;
+        questionContainer.innerHTML = html;
+
+        // Event listeners
+        const optionDivs = document.querySelectorAll('.option');
+        optionDivs.forEach(div => {
+            const radio = div.querySelector('input[type="radio"]');
+            const letter = div.getAttribute('data-letter');
+            if (radio) {
+                radio.addEventListener('change', () => {
+                    if (radio.checked) saveAnswer(letter);
+                });
+            }
+            div.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    const radioInside = div.querySelector('input');
+                    if (radioInside && !radioInside.checked) {
+                        radioInside.checked = true;
+                        saveAnswer(letter);
+                    }
+                }
+            });
+        });
+
+        questionCounterSpan.textContent = `Pregunta ${currentIndex+1} / 20`;
+    }
+
+    function showFinalResults() {
+        let correctCount = 0;
+        let detailsHtml = '';
+        for (let i = 0; i < questionsData.length; i++) {
+            const q = questionsData[i];
+            const userAns = userAnswers[i];
+            const isCorrect = (userAns === q.correct);
+            if (isCorrect) correctCount++;
+            const statusIcon = isCorrect ? '✅' : '❌';
+            const userShow = userAns ? userAns : '—';
+            const correctShow = q.correct;
+            detailsHtml += `
+                <div class="result-item">
+                    <span style="min-width: 30px;">${statusIcon}</span>
+                    <span><strong>Pregunta ${i+1}</strong> (Tu respuesta: ${userShow} / Correcta: ${correctShow})</span>
+                </div>
+            `;
+        }
+        const percent = Math.round((correctCount / 20) * 100);
+        resultsPanel.innerHTML = `
+            <h3>📊 Resultado final</h3>
+            <div class="result-summary">🎯 Aciertos: ${correctCount} de 20 (${percent}%)</div>
+            <div class="result-detail">${detailsHtml}</div>
+            <button id="closeResultsBtn" class="btn btn-secondary" style="margin-top: 10px; width:100%;">✖ Cerrar resumen</button>
+        `;
+        resultsPanel.style.display = 'block';
+        document.getElementById('closeResultsBtn')?.addEventListener('click', () => {
+            resultsPanel.style.display = 'none';
+        });
+        alert(`📊 Cuestionario completado.\nAciertos: ${correctCount} de 20 (${percent}%)\nRevisa el resumen detallado en pantalla.`);
+    }
+
+    function nextQuestion() {
+        if (currentIndex < 19) {
+            currentIndex++;
+            renderCurrentQuestion();
+        } else {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (confirm(`Aún tienes ${unanswered} pregunta(s) sin responder. ¿Deseas finalizar de todas formas? Las no respondidas se contarán como incorrectas.`)) {
+                    showFinalResults();
+                }
+            } else {
+                showFinalResults();
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderCurrentQuestion();
+        } else {
+            alert("Ya estás en la primera pregunta.");
+        }
+    }
+
+    function resetQuiz() {
+        if (confirm("¿Reiniciar todo el cuestionario? Se perderán todas las respuestas.")) {
+            userAnswers = new Array(20).fill(null);
+            currentIndex = 0;
+            resultsPanel.style.display = 'none';
+            updateLiveScore();
+            renderCurrentQuestion();
+        }
+    }
+
+    prevBtn.addEventListener('click', prevQuestion);
+    nextBtn.addEventListener('click', nextQuestion);
+    resetBtn.addEventListener('click', resetQuiz);
+
+    renderCurrentQuestion();
+    updateLiveScore();
+</script>
+</body>
+</html>
